@@ -34,7 +34,7 @@ class Task
         return $tasks;
     }
 
-    private function saveTasks(array $tasks): void
+    public function saveTasks(array $tasks): void
     {
         $taskData = array_map(function ($task) {
             return [

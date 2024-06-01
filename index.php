@@ -8,12 +8,13 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
+function markAsComplete(string $field): string
+{
+    return "<complete>$field</complete>";
+}
+
 function displayTasks(array $tasks): void
 {
-    function markAsComplete(string $field): string
-    {
-        return "<complete>$field</complete>";
-    }
 
     $hideDeletedTasks = array_filter($tasks, function ($task) {
         return $task->getStatus() !== 'Deleted';
@@ -68,7 +69,15 @@ while (true) {
             displayTasks($tasks);
             break;
         case 3:
-            // Implementation for completing a task
+            $tasks = Task::getTasks();
+            displayTasks($tasks);
+            $selection = (int)readline("Enter index of the task to complete: ");
+            $choice = $selection;
+            if (isset($tasks[$choice])) {
+                $tasks[$choice]->complete();
+            } else {
+                echo "Invalid task index.\n";
+            }
             break;
         case 4:
             // Implementation for deleting a task
