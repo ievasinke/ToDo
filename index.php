@@ -16,7 +16,7 @@ function markAsComplete(string $field): string
 function displayTasks(array $tasks): void
 {
 
-    $hideDeletedTasks = array_filter($tasks, function ($task) {
+    $hideDeletedTasks = array_filter($tasks, function (Task $task): bool {
         return $task->getStatus() !== 'Deleted';
     });
 
@@ -28,7 +28,7 @@ function displayTasks(array $tasks): void
     $tableTask = new Table($outputTask);
     $tableTask
         ->setHeaders(['Index', 'Task', 'Status', 'Date'])
-        ->setRows(array_map(function ($index, Task $task) {
+        ->setRows(array_map(function (int $index, Task $task): array {
             $result = [$index, $task->getBody(), $task->getStatus(), $task->getCreatedAt()];
             if ($task->getStatus() === 'Complete') {
                 $result = array_map('markAsComplete', $result);
@@ -80,7 +80,15 @@ while (true) {
             }
             break;
         case 4:
-            // Implementation for deleting a task
+            $tasks = Task::getTasks();
+            displayTasks($tasks);
+            $selection = (int)readline("Enter index of the task to delete: ");
+            $choice = $selection;
+            if (isset($tasks[$choice])) {
+                $tasks[$choice]->delete();
+            } else {
+                echo "Invalid task index.\n";
+            }
             break;
         default:
             echo "Invalid action. Please try again.\n";

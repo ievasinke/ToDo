@@ -36,14 +36,14 @@ class Task
 
     public function saveTasks(array $tasks): void
     {
-        $taskData = array_map(function ($task) {
+        $taskData = array_map(function (Task $task): array {
             return [
                 'body' => $task->body,
                 'status' => $task->status,
                 'createdAt' => $task->createdAt
             ];
         }, $tasks);
-        $taskJson = json_encode($taskData);
+        $taskJson = json_encode($taskData, JSON_PRETTY_PRINT);
         file_put_contents('task.json', $taskJson);
     }
 
