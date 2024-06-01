@@ -82,7 +82,12 @@ class Task
 
     public function delete(): void
     {
-        $this->status = 'Deleted';
-        $this->saveTasks($this->getTasks());
+        $tasks = $this->getTasks();
+        foreach ($tasks as $task) {
+            if ($task->getCreatedAt() === $this->getCreatedAt()) {
+                $task->status = 'Deleted';
+            }
+        }
+        $this->saveTasks($tasks);
     }
 }
